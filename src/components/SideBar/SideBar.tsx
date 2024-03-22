@@ -1,7 +1,7 @@
-import React from 'react';
 import styled from "styled-components";
-import { Checkbox } from 'antd';
-import type { GetProp } from 'antd';
+import { Checkbox} from 'antd';
+import useStore from "store";
+
 
 
 const Container  = styled.div `
@@ -14,25 +14,26 @@ const Container  = styled.div `
     }
 `
 
-const onChange: GetProp<typeof Checkbox.Group, 'onChange'> = (checkedValues) => {
-    console.log('checked = ', checkedValues);
-};
-
-
-
-const options = [
-    { label: 'Apple1', value: 'Apple1' },
-    { label: 'Apple2', value: 'Apple2' },
-    { label: 'Apple3', value: 'Apple3' },
-    { label: 'Pear', value: 'Pear' },
-    { label: 'Orange', value: 'Orange' },
-];
 
 const SideBar = () => {
+    const {
+        sortByTransferNumBy0,
+        sortByTransferNumBy1,
+        sortByTransferNumBy2,
+        sortByTransferNumBy3,
+        reset   }:any= useStore()    // разобраться с типами
+
+
     return (
         <Container>
+
             <h5>КОЛИЧЕСТВО ПЕРЕСАДОК</h5>
-            <Checkbox.Group style={{flexDirection:"column"}} options={options} defaultValue={['Pear']} onChange={onChange} />
+
+            <Checkbox onClick={reset} >Все</Checkbox>
+            <Checkbox onClick={sortByTransferNumBy0}> Без пересадок </Checkbox>
+            <Checkbox onClick={sortByTransferNumBy1}> 1 пересадка </Checkbox>
+            <Checkbox onClick={sortByTransferNumBy2}> 2 пересадки </Checkbox>
+            <Checkbox onClick={sortByTransferNumBy3}> 3 пересадки </Checkbox>
         </Container>
     );
 };

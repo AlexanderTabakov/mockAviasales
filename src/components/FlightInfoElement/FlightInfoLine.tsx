@@ -1,41 +1,58 @@
 import React from 'react';
 import styled from "styled-components";
+import useStore from "store";
 
 
-const FlightInfoLine = () => {
+export interface IProps {
+    airportDeparture?:string;
+    airportArrival?:string
+    timeInFlight?:number;
+    departureAt?:number;
+    arrivalAt?:number;
+    transfer?:string
+}
 
-    const FlightInfoLine = styled.div`
+const FlightInfoLineStyle = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-around;    
 `
 
 
-    const FlightInfoElement = styled.div`
+const FlightInfoElement = styled.div`
         display: flex;
         flex-direction: column;
 `
 
+const FlightInfoLine:React.FC <IProps>= ({airportDeparture,airportArrival, departureAt,arrivalAt, timeInFlight,transfer}) => {
+
+    const { data }:any= useStore()
+
+
+
     return (
 
-        <FlightInfoLine >
+        <FlightInfoLineStyle >
 
             <FlightInfoElement>
-                <p>Направление</p>
-                1045-0800
+                <div>
+                    <p>{airportDeparture}</p> - <p>{airportArrival}</p>
+                    <p>{departureAt}</p> - <p>{arrivalAt}</p>
+                </div>
             </FlightInfoElement>
 
             <FlightInfoElement>
                 <p>В пути</p>
-                21 15 ч
+                <p>{timeInFlight}</p>
             </FlightInfoElement>
             <FlightInfoElement>
                 <p>Пересадка</p>
-                HKG, JNB
+                <p>{transfer}</p>
             </FlightInfoElement>
 
-        </FlightInfoLine>
+        </FlightInfoLineStyle>
     );
 };
+
 
 export default FlightInfoLine;
