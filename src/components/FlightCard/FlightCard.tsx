@@ -1,11 +1,9 @@
-import React, {useEffect, useState} from 'react';
+
 import styled from "styled-components";
-import FlightInfoLine from "components/FlightInfoElement/FlightInfoLine";
-import {IProps} from "components/FlightInfoElement/FlightInfoLine";
-import useStore from "store";
+
 import { useNavigate } from "react-router-dom";
-import path from "path";
-import {date} from "yup";
+import {Button} from "antd";
+
 
 
 const FlightInfoLineStyle = styled.div`
@@ -21,7 +19,7 @@ const FlightInfoElement = styled.div`
 `
 
 
-export interface IFlightCardProps {
+interface IFlightCardProps {
     price:number,
     airportDeparture?:string;
     airportArrival?:string
@@ -29,21 +27,54 @@ export interface IFlightCardProps {
     departureAt?:number;
     arrivalAt?:number;
     transfer?:string;
+    numOfTransfer?:number,
     id:number
 }
 
 const Container = styled.div`
     display: flex;
-    border: red solid;
-    width: 500px;
+    background-color: white;
+    border-radius: 15px;
+    width: 45vw;
     flex-direction: column;
+    margin:2vw 1vw;
+    
+    .btn{
+        width: fit-content;
+        left:50%;
+        transform:translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+    }
+    
+    @media (max-width: 768px) {
+        font-size: 2vw;
+        .btn{
+            font-size: 3vw;
+            //width: 30vw;
+            //height: 5vw;
+            width: fit-content;
+        }
+
+        @media (min-width: 320px) {
+            font-size: 2vw;
+            margin-top: 22px;
+            .btn{
+                font-size: 2vw;
+                padding: 1px 0 1px 0;
+                //width: 30vw;
+                height: 15px;
+                width: fit-content;
+            }
+    }
     
 `
 const Header = styled.div`
     display: flex;
     align-items: center;
-    border: blue solid;
-    justify-content: space-evenly;
+    justify-content: space-around;
     
 `
 
@@ -64,19 +95,9 @@ const FlightCard:React.FC<IFlightCardProps> = ({
     arrivalAt,
     timeInFlight,
     transfer,
+    numOfTransfer,
     id})  => {
 
-    // const [ticket, setTicket] = useState(null)
-
-    // const {data,copyData} = useStore()
-    // useEffect(() => {
-    //     setTimeout(copyData, 1000)
-    //
-    //
-    //
-    // }, []);
-
-    // console.log('DATA',data)
 
     const router = useNavigate()
 
@@ -84,7 +105,7 @@ const FlightCard:React.FC<IFlightCardProps> = ({
 
         <Container>
             <Header>
-                <p>{price}</p>
+                <p>{price} Р    </p>
                 <img src="" alt="ssssssss"/>
             </Header>
 
@@ -99,17 +120,18 @@ const FlightCard:React.FC<IFlightCardProps> = ({
 
                 <FlightInfoElement>
                     <p>В пути</p>
-                    <p>{timeInFlight}</p>
+                    <p>{timeInFlight} Ч</p>
                 </FlightInfoElement>
                 <FlightInfoElement>
-                    <p>Пересадка</p>
+                    {/*<p>Пересадка</p>*/}
+                    <p>{numOfTransfer ? "Пересадки" : "Пересадка"}</p>
                     <p>{transfer}</p>
+
                 </FlightInfoElement>
 
             </FlightInfoLineStyle>
 
-            <button onClick={()=>router(`/ticket/${id}`)}>Кнопка билета</button>
-            {/*<button onClick={()=>router(`/ticket`,{state:{data:id}})}>Кнопка билета</button>*/}
+            <Button className={'btn'} onClick={()=>router(`/ticket/${id}`)}>Открыть Билет</Button>
 
         </Container>
 

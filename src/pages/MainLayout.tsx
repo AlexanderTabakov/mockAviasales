@@ -1,55 +1,111 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import FlightCard from "components/FlightCard/FlightCard";
 import SideBar from "components/SideBar/SideBar";
 import styled from "styled-components";
 import useStore, {IState} from "store";
-import {Button} from "antd";
+import Header from "components/Header";
+import {Radio, type RadioChangeEvent, type SelectProps} from "antd";
+type SelectCommonPlacement = SelectProps['placement'];
+
 
 
 const Container = styled.div `
     display: flex;
     flex-direction: row;
+    padding-top: 14vh;
     
 `
 
 const TicketLayout = styled.div `
     display: flex;
     flex-direction: column;
+    align-items: center;
+    .btnGroup{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        position: fixed;
+        z-index: 3;
+        width: 45vw;
+        gap: 12px;
+    }
+
+    .RadioBtn{
+        
+        width: 34vw;
+        padding: 3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    @media(max-width: 768px) {
+        .RadioBtn{
+            width: fit-content;
+            height: 20px;
+            font-size: 2vw;
+            padding: 5px;
+        }
+    }
+    
 `
 
-const TicketOptions = styled.div `
+const Layout = styled.main`
     display: flex;
+    justify-content: center;
+    @media (max-width: 768px) {
+        justify-content: flex-end;
+        font-size: 2vw ;
+    }
+    @media (min-width: 1920px) {
+        justify-content: center;
+    }
 `
 
 
 const MainLayout = () => {
-
-    // const [order, setOrder] = useEffect(null)
-
-
-    const { data,
+    const { data,         // разобраться с типами
         loading,
         hasErrors,
         fetch,
-        sortByPrice,
-        sortByFlightTime,
         copiedData,
         copyData,
-           }:any= useStore()    // разобраться с типами
+        order,
+        sortByPrice,
+        sortByFlightTime
+
+    }:any= useStore()
+
+    const [search, setSearch] = useState('')
+
+    const [placement, SetPlacement] = useState<SelectCommonPlacement>('topLeft');
 
 
-    // useLayoutEffect(()=> copyData(),[])
+    const placementChange = (e: RadioChangeEvent) => {
+        SetPlacement(e.target.value);
+    };
+
+
+
+    function searchFn (e:React.ChangeEvent<HTMLInputElement>)  {
+        e.preventDefault
+        setSearch(e.target.value)
+    }
+
+    console.log('search', search)
+
 
 
     useEffect(() => {
-        setTimeout(copyData, 1000)
+        setTimeout(copyData, 1000) // костыль, который пришлось сделать из-за особенности работы mockApi
         fetch()
-
 
     }, []);
 
 
     const ticket:any = [...copiedData]
+
+    console.log('testOrder', order)
 
 
     console.log(ticket)
@@ -67,34 +123,40 @@ const MainLayout = () => {
 
     return (
         <>
-            <Container>
 
+            <Layout>
+
+                <Header/>
                 <SideBar></SideBar>
+                <Container>
 
-                <TicketLayout>
-                    <TicketOptions>
+                    <TicketLayout>
 
-                        <Button onClick={sortByPrice}> Самый дешевый </Button>
-                        <Button onClick={sortByFlightTime}> Самый быстрый </Button>
-
-                    </TicketOptions>
-                    {ticket.map((ticket:any) =>  <FlightCard
-                        key={ticket.id}
-                        price={ticket.price}
-                        timeInFlight={ticket.timeInFlight}
-                        airportArrival={ticket.airportArrival}
-                        airportDeparture={ticket.airportDeparture}
-                        arrivalAt={ticket.arrivalAt}
-                        departureAt={ticket.departureAt}
-                        transfer={ticket.transfer}
-                        id={ticket.id}
-
-                    />)}
+                        <Radio.Group className={'btnGroup'} buttonStyle={'solid'} value={placement} onChange={placementChange}>
+                            <Radio.Button  className={'RadioBtn'} onClick={sortByPrice} value="topLeft">Самый Дешевый</Radio.Button>
+                            <Radio.Button className={'RadioBtn'} onClick={sortByFlightTime} value="topRight">Самый Быстрый</Radio.Button>
+                        </Radio.Group>
 
 
-                </TicketLayout>
+                        {ticket.map((ticket: any) => <FlightCard
+                            key={ticket.id}
+                            price={ticket.price}
+                            timeInFlight={ticket.timeInFlight}
+                            airportArrival={ticket.airportArrival}
+                            airportDeparture={ticket.airportDeparture}
+                            arrivalAt={ticket.arrivalAt}
+                            departureAt={ticket.departureAt}
+                            transfer={ticket.transfer}
+                            id={ticket.id}
 
-            </Container>
+                        />)}
+
+
+                    </TicketLayout>
+
+                </Container>
+
+            </Layout>
         </>
 
 
