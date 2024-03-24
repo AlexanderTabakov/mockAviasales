@@ -1,6 +1,5 @@
 import axios from "axios";
 import {create} from "zustand";
-import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { devtools } from 'zustand/middleware'
 import * as constants from "constants";
 
